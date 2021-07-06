@@ -90,7 +90,7 @@ exports.deleteTodo = (req, res) => {
       return document.delete();
     })
     .then(() => {
-      res.json({ message: "Delete successfull" });
+      res.json({ message: "Delete successfully" });
     })
     .catch((err) => {
       console.error(err);
