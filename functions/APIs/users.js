@@ -1,11 +1,11 @@
-const { admin, db } = require("../util/admin");
+const {admin, db} = require("../util/admin");
 const config = require("../util/config");
 
 const firebase = require("firebase");
 
 firebase.initializeApp(config);
 
-const { validateLoginData, validateSignUpData } = require("../util/validators");
+const {validateLoginData, validateSignUpData} = require("../util/validators");
 
 // Login
 exports.loginUser = (req, res) => {
@@ -14,7 +14,7 @@ exports.loginUser = (req, res) => {
     password: req.body.password,
   };
 
-  const { valid, errors } = validateLoginData(user);
+  const {valid, errors} = validateLoginData(user);
   if (!valid) return res.status(400).json(errors);
 
   firebase
@@ -24,13 +24,13 @@ exports.loginUser = (req, res) => {
       return data.user.getIdToken();
     })
     .then((token) => {
-      return res.json({ token });
+      return res.json({token});
     })
     .catch((error) => {
       console.error(error);
       return res
         .status(403)
-        .json({ general: "wrong credentials, please try again" });
+        .json({general: "wrong credentials, please try again"});
     });
 };
 
@@ -46,7 +46,7 @@ exports.signUpUser = (req, res) => {
     username: req.body.username,
   };
 
-  const { valid, errors } = validateSignUpData(newUser);
+  const {valid, errors} = validateSignUpData(newUser);
 
   if (!valid) return res.status(400).json(errors);
 
@@ -57,7 +57,7 @@ exports.signUpUser = (req, res) => {
       if (doc.exists) {
         return res
           .status(400)
-          .json({ username: "this username is already taken" });
+          .json({username: "this username is already taken"});
       } else {
         return firebase
           .auth()
@@ -83,16 +83,16 @@ exports.signUpUser = (req, res) => {
       return db.doc(`/users/${newUser.username}`).set(userCredentials);
     })
     .then(() => {
-      return res.status(201).json({ token });
+      return res.status(201).json({token});
     })
     .catch((err) => {
       console.error(err);
       if (err.code === "auth/email-already-in-use") {
-        return res.status(400).json({ email: "Email already in use" });
+        return res.status(400).json({email: "Email already in use"});
       } else {
         return res
           .status(500)
-          .json({ general: "Something went wrong, please try again" });
+          .json({general: "Something went wrong, please try again"});
       }
     });
 };
@@ -117,19 +117,20 @@ exports.uploadProfilePhoto = (req, res) => {
   const path = require("path");
   const os = require("os");
   const fs = require("fs");
-  const busboy = new BusBoy({ headers: req.headers });
+  const busboy = new BusBoy({headers: req.headers});
 
   let imageFileName;
+  ;
   let imageToBeUploaded = {};
 
   busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
     if (mimetype !== "image/png" && mimetype !== "image/jpeg") {
-      return res.status(400).json({ error: "Wrong file type submited" });
+      return res.status(400).json({error: "Wrong file type submited"});
     }
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
     imageFileName = `${req.user.username}.${imageExtension}`;
     const filePath = path.join(os.tmpdir(), imageFileName);
-    imageToBeUploaded = { filePath, mimetype };
+    imageToBeUploaded = {filePath, mimetype};
     file.pipe(fs.createWriteStream(filePath));
   });
   deleteImage(imageFileName);
@@ -152,11 +153,11 @@ exports.uploadProfilePhoto = (req, res) => {
         });
       })
       .then(() => {
-        return res.json({ message: "Image uploaded successfully" });
+        return res.json({message: "Image uploaded successfully"});
       })
       .catch((error) => {
         console.error(error);
-        return res.status(500).json({ error: error.code });
+        return res.status(500).json({error: error.code});
       });
   });
   busboy.end(req.rawBody);
@@ -174,7 +175,7 @@ exports.getUserDetail = (req, res) => {
     })
     .catch((error) => {
       console.error(error);
-      return res.status(500).json({ error: error.code });
+      return res.status(500).json({error: error.code});
     });
 };
 
@@ -183,7 +184,7 @@ exports.updateUserDetails = (req, res) => {
   document
     .update(req.body)
     .then(() => {
-      res.json({ message: "Updated successfully" });
+      res.json({message: "Updated successfully"});
     })
     .catch((error) => {
       console.error(error);

@@ -2,7 +2,7 @@ const { db } = require("../util/admin");
 
 exports.getAllTodos = (req, res) => {
   db.collection("todos")
-    .where("username", "==", req.user.username)
+    // .where("username", "==", req.user.username)
     .orderBy("createdAt", "desc")
     .get()
     .then((data) => {
@@ -12,7 +12,7 @@ exports.getAllTodos = (req, res) => {
           todoId: doc.id,
           title: doc.data().title,
           body: doc.data().body,
-          username: doc.data().username,
+          // username: doc.data().username,
           createdAt: doc.data().createdAt,
         });
       });

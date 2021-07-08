@@ -19,7 +19,7 @@ const {
 } = require("./APIs/users");
 
 // Todos
-app.get("/todos", auth, getAllTodos);
+app.get("/todos", getAllTodos);
 app.get("/todos/:todoId", auth, getOneTodo);
 app.post("/todos", auth, postOneTodo);
 app.delete("/todos/:todoId", auth, deleteTodo);
