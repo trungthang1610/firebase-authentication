@@ -1,5 +1,6 @@
 const functions = require("firebase-functions");
 const app = require("express")();
+const cors = require("cors");
 
 const auth = require("./util/auth");
 
@@ -17,6 +18,8 @@ const {
   getUserDetail,
   updateUserDetails,
 } = require("./APIs/users");
+
+app.use(cors({ origin: true }));
 
 // Todos
 app.get("/todos", getAllTodos);
